@@ -13,7 +13,7 @@ module Ethereum
       @proxy = proxy
       
       @ssl = uri.scheme == 'https'
-      @uri = URI("#{uri.scheme}://#{@host}:#{@port}#{uri.path}?#{uri.query}")
+      @uri = URI("#{uri.scheme}://#{@host}:#{@port}#{uri.path}#{uri.query.present? ? '?' + uri.query : ''}")
     end
 
     def send_single(payload)
