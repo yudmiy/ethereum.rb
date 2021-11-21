@@ -77,7 +77,9 @@ module Ethereum
     end
 
     def decode_tuple(value, subtype, start)
-      value
+      location = decode_uint(value[start..(start+63)]) * 2
+      size = decode_uint(value[location..location+63])
+      (0..size-1).map { |i| decode(array_subtype, value, location + (i+1) * 64) }
     end
 
     private 
