@@ -81,7 +81,7 @@ module Ethereum
       size = value.size
       array_items = size / 64
       array_items.times do |t|
-        arr << decode_uint(value[start..start+63])
+        arr << decode_uint(value[start..start+63]) * 2
         start = start + 64
       end
       arr
