@@ -76,7 +76,7 @@ module Ethereum
       types.each.with_index.map { |t , i| decode(t, data, i*64) }
     end
 
-    def decode_tuple(value, subtype, start))
+    def decode_tuple(value, subtype, start)
       value
     end
 
