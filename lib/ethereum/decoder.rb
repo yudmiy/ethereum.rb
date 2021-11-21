@@ -77,7 +77,14 @@ module Ethereum
     end
 
     def decode_tuple(value, subtype, start)
-      [value, subtype, start]
+      arr = []
+      size = value.size
+      array_items = size / 64
+      array_items.times do |t|
+        arr << @formatter.to_int(value[start..start+63])
+        start = start + 64
+      end
+      arr
     end
 
     private 
