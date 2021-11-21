@@ -76,6 +76,10 @@ module Ethereum
       types.each.with_index.map { |t , i| decode(t, data, i*64) }
     end
 
+    def decode_tuple(value, subtype, start))
+      value
+    end
+
     private 
       def trim(value, start, bitsize = 256)
         value[start+63-(bitsize/4-1)..start+63]
