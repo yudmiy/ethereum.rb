@@ -253,6 +253,7 @@ module Ethereum
         def_delegators :parent, :abi, :deployment, :events
         def_delegators :parent, :estimate, :deploy, :deploy_and_wait
         def_delegators :parent, :address, :address=, :sender, :sender=
+        def_delegators :parent, :amount, :amount=
         def_delegator :parent, :call_raw_proxy, :call_raw
         def_delegator :parent, :call_proxy, :call
         def_delegator :parent, :transact_proxy, :transact
