@@ -4,6 +4,7 @@ module Ethereum
   class Contract
 
     attr_reader :address
+    attr_accessor :amount
     attr_accessor :key
     attr_accessor :gas_limit, :gas_price, :nonce
     attr_accessor :code, :name, :abi, :class_object, :sender, :deployment, :client
@@ -115,10 +116,10 @@ module Ethereum
     end
 
     def send_transaction(tx_args)
-        @client.eth_send_transaction(tx_args)["result"]
+      @client.eth_send_transaction(tx_args)["result"]
     end
 
-    def send_raw_transaction(payload, to = nil)
+    def send_raw_transaction(payload, to = nil, amount = nil)
       Eth.configure { |c| c.chain_id = @client.net_version["result"].to_i }
       @nonce ||= @client.get_nonce(key.address)
       args = {
@@ -130,6 +131,7 @@ module Ethereum
         gas_price: gas_price
       }
       args[:to] = to if to
+      args[:value] = amount if amount
       tx = Eth::Tx.new(args)
       tx.sign key
       @client.eth_send_raw_transaction(tx.hex)["result"]
@@ -186,7 +188,7 @@ module Ethereum
 
     def transact(fun, *args)
       if key
-        tx = send_raw_transaction(call_payload(fun, args), address)
+        tx = send_raw_transaction(call_payload(fun, args), address, amount || nil)
       else
         tx = send_transaction(call_args(fun, args))
       end
