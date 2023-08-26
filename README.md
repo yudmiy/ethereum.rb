@@ -1,11 +1,21 @@
-# Ethereum Ruby library - Ethereum.rb
+# Ethereum for Ruby
 
-[![Build Status](https://travis-ci.org/EthWorks/ethereum.rb.svg?branch=master)](https://travis-ci.org/EthWorks/ethereum.rb) [![security](https://hakiri.io/github/NullVoxPopuli/MetaHash/master.svg)](https://hakiri.io/github/NullVoxPopuli/MetaHash/master) [![Dependency Status](https://gemnasium.com/marekkirejczyk/ethereum.rb.svg)](https://gemnasium.com/marekkirejczyk/ethereum.rb) [![Code Climate](https://codeclimate.com/github/marekkirejczyk/ethereum.rb/badges/gpa.svg)](https://codeclimate.com/github/marekkirejczyk/ethereum.rb)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/q9f/eth.rb/Spec)](https://github.com/q9f/eth.rb/actions)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/q9f/eth.rb)](https://github.com/q9f/eth.rb/releases)
+[![Gem](https://img.shields.io/gem/v/eth)](https://rubygems.org/gems/eth)
+[![Gem](https://img.shields.io/gem/dt/eth)](https://rubygems.org/gems/eth)
+[![Visitors](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fq9f%2Feth.rb&count_bg=%2379C83D&title_bg=%23555555&icon=rubygems.svg&icon_color=%23FF0000&title=visitors&edge_flat=false)](https://hits.seeyoufarm.com)
+[![codecov](https://codecov.io/gh/q9f/eth.rb/branch/main/graph/badge.svg?token=IK7USBPBZY)](https://codecov.io/gh/q9f/eth.rb)
+[![Maintainability](https://api.codeclimate.com/v1/badges/469e6f66425198ad7614/maintainability)](https://codeclimate.com/github/q9f/eth.rb/maintainability)
+[![Top Language](https://img.shields.io/github/languages/top/q9f/eth.rb?color=red)](https://github.com/q9f/eth.rb/pulse)
+[![Yard Doc API](https://img.shields.io/badge/documentation-API-blue)](https://q9f.github.io/eth.rb)
+[![Usage Wiki](https://img.shields.io/badge/usage-WIKI-blue)](https://github.com/q9f/eth.rb/wiki)
+[![Open-Source License](https://img.shields.io/github/license/q9f/eth.rb)](LICENSE)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/q9f/eth.rb/issues)
 
-The goal of ethereum.rb is to make interacting with ethereum blockchain from ruby as fast and easy as possible (but not easier!).
+A straightforward library to build, sign, and broadcast Ethereum transactions. It allows the separation of key and node management. Sign transactions and handle keys anywhere you can run Ruby and broadcast transactions through any local or remote node. Sign messages and recover signatures for authentication.
 
-## Maintainer
-Project is currently maintained by [@kurotaky](https://github.com/kurotaky).
+**Note,** this repository is just a public archive of the no longer maintained `ethereum` gem. For the partial rewrite and merge with the `eth` gem see [q9f/eth.rb](https://github.com/q9f/eth.rb/).
 
 ## Highlights
 
@@ -21,7 +31,7 @@ Project is currently maintained by [@kurotaky](https://github.com/kurotaky).
 
 ## Installation
 
-Before installing gem make sure you meet all [prerequisites](https://github.com/marekkirejczyk/ethereum.rb/blob/master/PREREQUISITES.md), especially that you have:
+Before installing the gem make sure you meet all [prerequisites](https://github.com/marekkirejczyk/ethereum.rb/blob/master/PREREQUISITES.md), especially that you have:
 * compatible ethereum node installed
 * compatible solidity compiler installed
 * wallet with some ethereum on it
@@ -44,14 +54,14 @@ Or install it yourself as:
 
 ## Basic Usage
 
-You can create contract from solidity source and deploy it to the blockchain, with following code:
+You can create a contract from solidity source and deploy it to the blockchain, with the following code:
 
 ```ruby
 contract = Ethereum::Contract.create(file: "greeter.sol")
 address = contract.deploy_and_wait("Hello from ethereum.rb!")
 ```
 
-Deployment may take up to couple of minutes. Once deployed you can start interacting with contract, e.g. calling it's methods:
+Deployment may take up to a couple of minutes. Once deployed you can start interacting with the contract, e.g. calling it's methods:
 
 ```ruby
 contract.call.greet # => "Hello from ethereum.rb!"
@@ -81,21 +91,21 @@ Note: If class of given name exist it will be undefined first to avoid name coll
 
 ### Get contract from blockchain
 
-The other way to obtain contract instance is get one that already exist in the blockchain. To do so you need a contract name, contract address and ABI definition.
+The other way to obtain a contract instance is to get one that already exists on the blockchain. To do so you need a contract name, contract address and ABI definition.
 
 ```ruby
 contract = Ethereum::Contract.create(name: "MyContract", address: "0x01a4d1A62F01ED966646acBfA8BB0b59960D06dd ", abi: abi)
 ```
 
-Note that you need to specify contract name, that will be used to define new class in ruby, as it is not a part of ABI definition.
+Note that you need to specify a contract name, that will be used to define new class in ruby, as it is not a part of the ABI definition.
 
-Alternatively you can obtain abi definition and name from contract source file:
+Alternatively you can obtain the abi definition and name from a contract source file:
 
 ```ruby
 contract = Ethereum::Contract.create(file: "MyContract.sol", address: "0x01a4d1A62F01ED966646acBfA8BB0b59960D06dd ")
 ```
 
-If you want to create new contract, that is not yet deployed from ABI definition you will need also to supply binary code:
+If you want to create a new contract, that is not yet deployed from ABI definition you will need also to supply binary code:
 
 ```ruby
 contract = Ethereum::Contract.create(name: "MyContract", abi: abi, code: "...")
@@ -122,7 +132,7 @@ Functions defined in a contract are exposed using the following conventions:
 
 ```ruby
 contract.transact.[function_name](params)
-contract.transact_and_wait.[function_name](params)  
+contract.transact_and_wait.[function_name](params)
 contract.call.[function_name](params)
 ```
 
@@ -247,7 +257,7 @@ Api calls translates directly to client methods. E.g. to call `eth_gasPrice` met
 client.eth_gas_price # => {"jsonrpc"=>"2.0", "result"=>"0x4a817c800", "id"=>1}
 ```
 
-Note: methods are transated to underscore notation.
+Note: methods are translated to underscore notation using metaprogramming (See [`client.rb`](./lib/ethereum/client.rb) for more information).
 
 Full list of json rpc methods is available [here](https://github.com/ethereum/wiki/wiki/JSON-RPC#user-content-json-rpc-methods)
 
