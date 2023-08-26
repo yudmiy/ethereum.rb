@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
     "documentation_uri" => "https://q9f.github.io/eth.rb/",
     "github_repo" => "https://github.com/q9f/eth.rb",
     "source_code_uri" => "https://github.com/q9f/eth.rb",
-  }.freeze
+  }
 
   if spec.respond_to?(:metadata)
     spec.metadata['allowed_push_host'] = "https://rubygems.org"
